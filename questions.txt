@@ -1,0 +1,58 @@
+Question 1: Which countries have the most Invoices?
+Use the Invoice table to determine the countries that have the most invoices. Provide a table of BillingCountry and Invoices ordered by the number of invoices for each country. The country with the most invoices should appear first.
+
+/* Query 1 - query used for first insight */
+SELECT Customer.Country, COUNT(Invoice.InvoiceId) AS Invoices
+FROM Invoice
+JOIN Customer 
+ON Invoice.CustomerID = Customer.CustomerID
+GROUP BY 1
+ORDER BY 2 DESC;
+
+Question 2: Which city has the best customers?
+We would like to throw a promotional Music Festival in the city we made the most money. Write a query that returns the 1 city that has the highest sum of invoice totals. Return both the city name and the sum of all invoice totals.
+
+/* Query 2 - query used for second insight */
+SELECT customer.city, SUM(invoice.Total) AS "Invoice Totals"
+FROM customer
+JOIN invoice 
+ON customer.CustomerId=Invoice.CustomerId
+GROUP BY customer.city
+ORDER BY sum(invoice.Total) DESC
+LIMIT 10;
+
+Question 3: Who is the best customer?
+The customer who has spent the most money will be declared the best customer. Build a query that returns the person who has spent the most money. I found the solution by linking the following three: Invoice, InvoiceLine, and Customer tables to retrieve this information, but you can probably do it with fewer!
+
+/* Query 3 - query used for third insight */
+SELECT  FirstName || ' ' || LastName as Name, sum(i.Total) as TotalSpent
+FROM Customer c
+JOIN invoice i 
+ON c.CustomerId = i.CustomerId
+GROUP BY (i.CustomerId)
+ORDER BY TotalSpent desc
+LIMIT 10;
+
+Question 4
+Use your query to return the email, first name, last name, and Genre of all Rock Music listeners. Return your list ordered alphabetically by email address starting with A.
+
+I chose to link information from the Customer, Invoice, InvoiceLine, Track, and Genre tables, but you may be able to find another way to get at the information.
+
+/* Query 4 - query used for fourth insight */
+SELECT DISTINCT
+c.Email AS Email,
+c.FirstName AS "First Name",
+c.LastName AS "Last Name",
+g.Name AS Name
+FROM Customer c JOIN Invoice i
+ON c.CustomerId = i.CustomerId JOIN InvoiceLine il 
+ON i.InvoiceId = il.InvoiceId JOIN Track t 
+ON il.TrackId = t.TrackId JOIN Genre g 
+ON t.GenreId = g.GenreId 
+WHERE g.Name = "Rock" 
+ORDER BY c.Email;
+
+
+
+
+
